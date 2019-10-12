@@ -4,7 +4,7 @@ FROM alpine:3.10.2
 # https://pkgs.alpinelinux.org/package/v3.10/main/x86_64/bind
 #
 LABEL \
-	ClamAV 9.14.3-r0 \
+	BIND 9.14.3-r0 \
 	Alpine 3.10.2 \
 	maintainer georges.gregorio@gmail.com
 
@@ -14,7 +14,7 @@ ENV \
 
 RUN set -eux;\
 	#
-	# Install ClamAV
+	# Install BIND
 	#
 	apk add --no-cache --upgrade bind && \
 	#
@@ -30,5 +30,4 @@ VOLUME [ "/etc/bind" ]
 
 EXPOSE 53/tcp 53/udp
 
-CMD ["named", "-c", "/etc/bind/named.conf", "-g", "-u", "named"]
-
+CMD ["named", "-4", "-c", "/etc/bind/named.conf", "-g", "-u", "named"]
