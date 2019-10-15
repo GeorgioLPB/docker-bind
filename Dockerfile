@@ -3,23 +3,10 @@ FROM alpine:3.10.2
 # https://hub.docker.com/_/alpine
 # https://pkgs.alpinelinux.org/package/v3.10/main/x86_64/bind
 #
-LABEL \
-	BIND 9.14.3-r0 \
-	Alpine 3.10.2 \
-	maintainer georges.gregorio@gmail.com
-
-ENV \
-	BIND="9.14.3-r0" \
-	Alpine="3.10.2"
+LABEL maintainer georges.gregorio@gmail.com
 
 RUN set -eux;\
-	#
-	# Install BIND
-	#
 	apk add --no-cache --upgrade bind && \
-	#
-	# Folder configuration
-	#
 	mkdir -p '/var/cache/bind' && \
 	chown root:named '/var/cache/bind' && \
 	chmod 770 '/var/cache/bind'
