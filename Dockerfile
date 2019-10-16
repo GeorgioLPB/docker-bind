@@ -13,8 +13,10 @@ RUN set -eux;\
 
 COPY bind/ /etc/bind/
 
-VOLUME [ "/etc/bind" ]
+#WORKDIR /etc/bind
 
-EXPOSE 53/tcp 53/udp
+#VOLUME [ "/etc/bind" ]
+
+#EXPOSE 53/tcp 53/udp
 
 CMD ["named", "-4", "-c", "/etc/bind/named.conf", "-g", "-u", "named"]
