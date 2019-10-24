@@ -4,7 +4,7 @@
 
 | Tags         | Alpine   | Bind        |
 |:-------------|:---------|:------------|
-| `latest`     | `3.10.2` | `9.14.3-r0` |
+| `latest`     | `3.10.3` | `9.14.7-r0` |
 
 * [latest, (latest/Dockerfile)](https://github.com/GeorgioLPB/docker-bind/blob/master/Dockerfile)
 
