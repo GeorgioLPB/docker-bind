@@ -1,4 +1,4 @@
-FROM alpine:3.11.0
+FROM alpine:3.11.2
 #
 # https://hub.docker.com/_/alpine
 # https://pkgs.alpinelinux.org/package/v3.10/main/x86_64/bind
