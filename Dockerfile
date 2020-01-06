@@ -26,6 +26,8 @@ WORKDIR /etc/bind
 
 VOLUME [ "/etc/bind" ]
 
+HEALTHCHECK --interval=30s --retries=1 --timeout=5s --start-period=5s CMD dig A $(hostname) +short | egrep "[0-9]+\.[0-9]+\.[0-9]\.[0-9]" || exit 1
+
 EXPOSE 53/tcp 53/udp
 
 CMD [ "/init" ]
