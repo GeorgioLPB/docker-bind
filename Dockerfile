@@ -1,22 +1,27 @@
 FROM alpine:3.11.2
 #
 # https://hub.docker.com/_/alpine
-# https://pkgs.alpinelinux.org/package/v3.10/main/x86_64/bind
+# https://pkgs.alpinelinux.org/package/v3.11/main/x86_64/bind
 #
 LABEL maintainer georges.gregorio@gmail.com
 
-RUN set -eux;\
+ENV \
+	s6_release='1.22.1.0'
+
+ADD "https://github.com/just-containers/s6-overlay/releases/download/v${s6_release}/s6-overlay-armhf.tar.gz" /tmp/
+
+RUN set -eux; \
 	apk add --no-cache --upgrade bind && \
-	mkdir -p '/var/cache/bind' && \
-	chown root:named '/var/cache/bind' && \
-	chmod 770 '/var/cache/bind'
+	tar -xzvf /tmp/s6-overlay-armhf.tar.gz -C / && \
+	rm -fv /tmp/s6-overlay-armhf.tar.gz
 
-COPY bind/ /etc/bind/
+COPY --chown=root:root config.init /etc/cont-init.d/00-config
+COPY --chown=root:root smbd.run /etc/services.d/bind/run
 
-#WORKDIR /etc/bind
+WORKDIR /etc/bind
 
-#VOLUME [ "/etc/bind" ]
+VOLUME [ "/etc/bind" ]
 
-#EXPOSE 53/tcp 53/udp
+EXPOSE 53/tcp 53/udp
 
-CMD ["named", "-4", "-c", "/etc/bind/named.conf", "-g", "-u", "named"]
+CMD [ "/init" ]
