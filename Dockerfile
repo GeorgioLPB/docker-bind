@@ -19,8 +19,10 @@ RUN set -eux; \
 	tar -xzvf "/tmp/s6-overlay-${s6_arch}.tar.gz" -C / && \
 	rm -fv "/tmp/s6-overlay-${s6_arch}.tar.gz"
 
-COPY --chown=root:root config.init /etc/cont-init.d/00-config
-COPY --chown=root:root smbd.run /etc/services.d/bind/run
+#COPY --chown=root:root config.init /etc/cont-init.d/00-config
+#COPY --chown=root:root bind.run /etc/services.d/bind/run
+
+ADD rootfs/ /
 
 WORKDIR /etc/bind
 
