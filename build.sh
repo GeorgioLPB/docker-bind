@@ -25,7 +25,9 @@ docker build -t ggregorio/${appli}:${release} -f Dockerfile.${release} . && \
 	docker push "ggregorio/${appli}:${release}" && \
 	if [ "${release}" == "amd64" ] ; then
 		docker tag "ggregorio/${appli}:${release}" "ggregorio/${appli}:latest" && \
-		docker push  "ggregorio/${appli}:latest"
-	fi
+		docker push  "ggregorio/${appli}:latest" && \
+		docker rmi "ggregorio/${appli}:latest"
+	fi && \
+	docker rmi "ggregorio/${appli}:${release}" && \
 	rm -vf "./${appli}-${release}.tar"
 
