@@ -1,2 +1,0 @@
-#!/usr/bin/execlineb -P
-/usr/sbin/named -4 -c /etc/bind/named.conf -g -u named
