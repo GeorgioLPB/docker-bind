@@ -1,0 +1,35 @@
+#!/usr/bin/with-contenv sh
+
+get_host_file()
+{
+	file="${1}"
+	url="${2}"
+	curl "${url}" | egrep "^[0-9]" | awk '{print $2}' | dos2unix | tr "[A-Z]" "[a-z]" > ${file}
+}
+
+get_host_file '/tmp/host.mvps' 'http://winhelp2002.mvps.org/hosts.txt'
+get_host_file '/tmp/host.yoyo' 'https://pgl.yoyo.org/as/serverlist.php?hostformat=hosts&showintro=0&mimetype=plaintext'
+get_host_file '/tmp/host.adaw' 'https://adaway.org/hosts.txt'
+
+cat /tmp/host.mvps /tmp/host.yoyo /tmp/host.adaw \
+        | sort \
+        | uniq \
+        | sed 's#^#zone "#g' \
+        | sed 's#$#" { type master; notify no; file "/etc/bind/blocked.zone"; };#g' \
+        > '/etc/bind/adservers.blocked.conf'
+
+echo "\$TTL    86400   ; one day
+@       IN      SOA     ads.example.com. hostmaster.example.com. (
+               2014090101
+                    28800
+                     7200
+                   864000
+                    86400 )
+                NS      my.dns.server.org
+                A       127.0.0.1
+@       IN      A       127.0.0.1
+*       IN      A       127.0.0.1
+" > '/etc/bind/blocked.zone'
+
+rm -vf /tmp/host.mvps /tmp/host.yoyo /tmp/host.adaw
+ps -ef | grep /usr/sbin/named | grep -v grep | awk '{print $1}' | xargs kill

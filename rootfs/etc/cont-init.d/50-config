@@ -1,0 +1,9 @@
+#!/usr/bin/with-contenv sh
+if [ ! -f '/usr/sbin/named' ] ; then
+	apk add --no-cache --upgrade bind
+fi
+if [ ! -f '/etc/bind/named.conf' ] ; then
+	cp -p /etc/bind/named.conf.authoritative /etc/bind/named.conf
+fi
+chown named:named /etc/bind/rndc.key
+/etc/periodic/daily/update_ad_servers_list

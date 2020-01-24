@@ -1,26 +1,24 @@
-FROM arm32v7/alpine:3.11.2
+FROM arm32v7/alpine:3.11.3
 #
 # https://hub.docker.com/_/alpine
 # https://pkgs.alpinelinux.org/package/v3.11/main/armv7/bind
+# https://github.com/just-containers/s6-overlay/releases
 #
 LABEL maintainer georges.gregorio@gmail.com
 
 ENV \
 	s6_release='1.22.1.0' \
 	s6_arch='armhf' \
-	s6_sha256='93f4e0fb57f18f42c4f45dabc13f068f9bfc3bed37031d31322c341aa7de7330'
-
-ADD "https://github.com/just-containers/s6-overlay/releases/download/v${s6_release}/s6-overlay-${s6_arch}.tar.gz" /tmp/
+	s6_sha256='93f4e0fb57f18f42c4f45dabc13f068f9bfc3bed37031d31322c341aa7de7330' \
+	s6_url="https://github.com/just-containers/s6-overlay/releases/download"
 
 RUN set -eux; \
-	apk add --no-cache --upgrade bind && \
 	cd /tmp && \
+	wget -O "./s6-overlay-${s6_arch}.tar.gz" "${s6_url}/v${s6_release}/s6-overlay-${s6_arch}.tar.gz" && \
 	echo "${s6_sha256} *s6-overlay-${s6_arch}.tar.gz" | sha256sum -c - && \
 	tar -xzvf "/tmp/s6-overlay-${s6_arch}.tar.gz" -C / && \
 	rm -fv "/tmp/s6-overlay-${s6_arch}.tar.gz"
 
-#COPY --chown=root:root config.init /etc/cont-init.d/00-config
-#COPY --chown=root:root bind.run /etc/services.d/bind/run
 ADD rootfs/ /
 
 WORKDIR /etc/bind
